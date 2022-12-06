@@ -18,20 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     markAsCompleted() {
       return this.update({ completed: true });
     }
-
     static getTodos() {
-      const todos = Todo.findAll({
-        order: [["id", "ASC"]],
-      });
-      return todos;
-    }
-
-    deleteTodo() {
-      return this.destroy({
-        where: {
-          id: this.id,
-        },
-      });
+      return this.findAll({ order: [["id", "ASC"]] });
     }
   }
   Todo.init(

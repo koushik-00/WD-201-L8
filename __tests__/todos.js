@@ -2,7 +2,6 @@ const request = require("supertest");
 
 const db = require("../models/index");
 const app = require("../app");
-const { json } = require("sequelize");
 
 let server, agent;
 
@@ -22,7 +21,7 @@ describe("Todo Application", function () {
     }
   });
 
-  test("Creates a todo and responds with json at /todos POST endpoint", async () => {
+  test("Todo is created and responds with json at /todos POST endpoint", async () => {
     const response = await agent.post("/todos").send({
       title: "Buy milk",
       dueDate: new Date().toISOString(),
@@ -36,7 +35,7 @@ describe("Todo Application", function () {
     expect(parsedResponse.id).toBeDefined();
   });
 
-  test("Marks a todo with the given ID as complete", async () => {
+  test("Todo is marked complete with given id, async () => {
     const response = await agent.post("/todos").send({
       title: "Buy milk",
       dueDate: new Date().toISOString(),
@@ -72,30 +71,19 @@ describe("Todo Application", function () {
     expect(parsedResponse[3]["title"]).toBe("Buy ps3");
   });
 
-  test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
+  test("Todo is deleted with given ID and sends response in boolean", async () => {
     // FILL IN YOUR CODE HERE
     const response = await agent.post("/todos").send({
-      title: "Buy a milk powder",
+      title: "Buy notes",
       dueDate: new Date().toISOString(),
       completed: false,
     });
 
-    const parsedResponse = JSON.parse(response.text);
-    const todoID = parsedResponse.id;
+    const parseResponse = JSON.parse(response.text);
+    const todoID = parseResponse.id;
 
-    const deleteExistingRecordResponse = await agent
-      .delete(`/todos/${todoID}`)
-      .send();
-    const parsedDeleteExistingRecordResponse = JSON.parse(
-      deleteExistingRecordResponse.text
-    );
-
-    expect(parsedDeleteExistingRecordResponse).toBe(true);
-
-    const deleteNonExistingRecord = await agent.delete(`/todos/1321`).send();
-    const parseddeleteNonExistingRecord = JSON.parse(
-      deleteNonExistingRecord.text
-    );
-    expect(parseddeleteNonExistingRecord).toBe(false);
+    const deleteResponse = await agent.delete(`/todos/${todoID}`).send();
+    const parsedDeleteResponse = JSON.parse(deleteResponse.text);
+    expect(parsedDeleteResponse).toBe(true);
   });
 });
